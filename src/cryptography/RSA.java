@@ -1,7 +1,7 @@
 package cryptography;
 
 import java.io.PrintStream;
-import java.util.Locale;
+import java.math.BigInteger;
 import java.util.Scanner;
 
 public class RSA {
@@ -12,7 +12,7 @@ public class RSA {
         int P;
         int Q;
         int N;
-        int M;
+        BigInteger M;
 
         System.out.print("Please enter a P value: ");
         P = scanner.nextInt();
@@ -36,7 +36,7 @@ public class RSA {
         if (scanner.nextLine().toLowerCase().contentEquals("yes") || userInput.toLowerCase().contentEquals("yes") || userInput.equals("yes")){
             int GCD = 0;
             int E;
-            while (GCD != 1) {
+            while (GCD !=1) {
                 System.out.print("Please enter a E value: ");
                 E = scanner.nextInt();
                 GCD = gcdByEuclidsAlgorithm(E, P-1);
@@ -57,16 +57,16 @@ public class RSA {
                     System.out.println("Private Key: D = " + D);
 
                     show.print("Please enter a Message to encrypt: ");
-                    M = scanner.nextInt();
+                    M = scanner.nextBigInteger();
 
-                    int ciphertext;
+                    BigInteger ciphertext;
                     ciphertext = modularArithmetic(M, E, N);
 
                     show.println("C = "+ciphertext);
 
                     show.println("Please Enter a Value to Decrypt: ");
-                    int C;
-                    C = scanner.nextInt();
+                    BigInteger C;
+                    C = scanner.nextBigInteger();
                     M = modularArithmetic(C, D, N);
                     show.println(M);
                 }
@@ -74,7 +74,7 @@ public class RSA {
         } else if (scanner.nextLine().toLowerCase().contentEquals("no") || userInput.toLowerCase().contentEquals("no") || userInput.equals("no")) {
             int GCD = 0;
             int E = 2;
-            while (GCD != 1) {
+            while ( GCD != 1) {
                 E++;
                 GCD = gcdByEuclidsAlgorithm(E, N);
 
@@ -95,16 +95,16 @@ public class RSA {
             System.out.println("Private Key: D = " + D);
 
             show.print("Please enter a Message to encrypt: ");
-            M = scanner.nextInt();
+            M = scanner.nextBigInteger();
 
-            int ciphertext;
+            BigInteger ciphertext;
             ciphertext = modularArithmetic(M, E, N);
 
             show.println("C = "+ciphertext);
 
             show.println("Please Enter a Value to Decrypt: ");
-            int C;
-            C = scanner.nextInt();
+            BigInteger C;
+            C = scanner.nextBigInteger();
 
             M = modularArithmetic(C, D, N);
             show.println(M);
@@ -115,13 +115,13 @@ public class RSA {
 
     }
 
-    static int modularArithmetic(int c, int d, int n){
-        double power;
-        double y;
-        power = Math.pow(c, d);
-        System.out.println(power);
-        y = power % n;
-        return (int)y;
+    static BigInteger modularArithmetic(BigInteger c, int d, int n){
+        BigInteger c1 = new BigInteger(String.valueOf(c));
+        BigInteger n1 = new BigInteger(String.valueOf(n));
+        BigInteger power = c1.pow(d);
+        BigInteger y;
+        y = power.mod(n1);
+        return y;
     }
 
     // https://www.baeldung.com/java-greatest-common-divisor
