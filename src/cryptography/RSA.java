@@ -1,142 +1,172 @@
 package cryptography;
 
 import java.io.PrintStream;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Scanner;
 
 public class RSA {
-    public static void main(String[] args) {
-        PrintStream show = System.out;
-        Scanner scanner = new Scanner(System.in);
+    public void RSACalculation() {
 
-        BigInteger P;
-        BigInteger Q;
-        BigInteger N;
-        BigInteger M;
-
-        System.out.print("Please enter a P value: ");
-        P = scanner.nextBigInteger();
-        System.out.println("Your chose P value as: " + P);
-
-        System.out.print("Please enter a Q value: ");
-        Q = scanner.nextBigInteger();
-        System.out.println("Your chose Q value as: " + Q);
-
-        System.out.print("Your N Value is: ");
-//        N = P * Q;
-        N = P.multiply(Q);
-        System.out.println(N);
-
-        BigInteger PN;
-//        PN = (P-1)*(Q-1);
-        PN = (P.subtract(BigInteger.valueOf(1))).multiply(Q.subtract(BigInteger.valueOf(1)));
-        System.out.println("Your Phi n value is: "+PN);
+        PrintStream show = System.out; // Defining show to System.out to make it easier to print
+        Scanner scanner = new Scanner(System.in); // Scanner Object to get user input
 
 
-        System.out.print("Do you want to enter E value or Have it Generated, Yes or No: ");
-        String userInput;
-        userInput = scanner.nextLine();
-        if (scanner.nextLine().toLowerCase().contentEquals("yes") || userInput.toLowerCase().contentEquals("yes") || userInput.equals("yes")){
-            BigInteger GCD = new BigInteger(String.valueOf(BigInteger.valueOf(0)));
-            BigInteger E;
-            while (!GCD.equals(BigInteger.valueOf(1))) {
-                System.out.print("Please enter a E value: ");
-                E = scanner.nextBigInteger();
-                GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1)));
+        boolean again = true;
+        while (again) {
 
-                System.out.print("GCD(" + E + "," + N + ") = " + GCD);
-                if (!GCD.equals(BigInteger.valueOf(1)))
-                    System.out.println(" - This GCD(e,"+N+") does not = 1, So another E value is selected");
-                else{
-                    System.out.println("\nYour E Value is: " + E);
+            // Defined BigInteger Variables to save user input to
+            BigInteger P;
+            BigInteger Q;
+            BigInteger N;
+            BigInteger M;
+            String userInput;
 
-                    System.out.println("Public Key: (N="+N+", "+"E="+ E+")");
+            System.out.println();
 
-                    BigInteger D;
+            System.out.print("Please enter a P value (Make sure its Prime Number): ");
+            P = scanner.nextBigInteger();
 
-                    D = modInverse(E, PN);  //Use this when not using BigInteger or modInverse Method returns BigInteger
+            System.out.println("You chose P value as: " + P + "\n");
+
+            System.out.print("Please enter a Q value (Make sure its Prime Number): ");
+            Q = scanner.nextBigInteger();
+            System.out.println("You chose Q value as: " + Q + "\n");
+
+            System.out.print("Your N Value is: ");
+            N = P.multiply(Q);
+            System.out.println(N + "\n");
+
+            BigInteger PN;
+            PN = (P.subtract(BigInteger.valueOf(1))).multiply(Q.subtract(BigInteger.valueOf(1)));
+            System.out.println("Your Phi n value is: " + PN + "\n");
+
+
+            System.out.print("Enter an E value? (Yes) or Have it Generated (No), Yes or No: ");
+            userInput = scanner.next();
+            if (userInput.toLowerCase().contentEquals("yes")) {
+                BigInteger GCD = new BigInteger(String.valueOf(BigInteger.valueOf(0)));
+                BigInteger E;
+                while (!GCD.equals(BigInteger.valueOf(1))) {
+                    System.out.print("Please enter a E value: ");
+                    E = scanner.nextBigInteger();
+                    GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1)));
+
+                    System.out.print("\n" + "GCD(" + E + "," + N + ") = " + GCD);
+                    if (!GCD.equals(BigInteger.valueOf(1)))
+                        System.out.println(" - This GCD(" + E + ", " + N + ") does not = 1, So another E value is selected");
+                    else {
+                        System.out.println("\nYour E Value is: " + E + "\n");
+
+                        System.out.println("Public Key: (N=" + N + ", " + "E=" + E + ")");
+
+                        BigInteger D;
+
+                        D = modInverse(E, PN);  //Use this when not using BigInteger or modInverse Method returns BigInteger
 //                    D = BigInteger.valueOf((modInverse(E, PN))); //Use this when using BigIntegers or if modInverse method returns int
 
-                    System.out.println("Private key is d = e^-1 mod phi(n) = " + E + "^-1 mod " + PN);
-                    System.out.println("Private Key: D = " + D);
+//                    System.out.println("Private key is d = e^-1 mod phi(n) = " + E + "^-1 mod " + PN);
+                        System.out.println("Private Key: D = " + D + "\n");
+                        System.out.println("Known Parameters: " + "P = " + P + ", " + " Q = " + Q + ", " + " N = " + N + ", " + " E = " + E + ", " + " ϕn = " + PN + ", " + " D = " + D + "\n");
+                        show.print("Please enter a Message to encrypt: ");
+                        M = scanner.nextBigInteger();
 
-                    show.print("Please enter a Message to encrypt: ");
-                    M = scanner.nextBigInteger();
+                        BigInteger ciphertext;
+                        ciphertext = modularArithmetic(M, E, N);
 
-                    BigInteger ciphertext;
-                    ciphertext = modularArithmetic(M, E, N);
+                        show.println("Encrypted Message (Ciphertext C) is C = " + ciphertext + "\n");
 
-                    show.println("C = "+ciphertext);
-
-                    show.println("Please Enter a Value to Decrypt: ");
-                    BigInteger C;
-                    C = scanner.nextBigInteger();
-                    M = modularArithmetic(C, D, N);
-                    show.println(M);
+                        show.print("Please Enter a Value to Decrypt: ");
+                        BigInteger C;
+                        C = scanner.nextBigInteger();
+                        M = modularArithmetic(C, D, N);
+                        show.println("The Decrypted Message(M) is M = " + M + "\n");
+                    }
                 }
-            }
-        } else if (scanner.nextLine().toLowerCase().contentEquals("no") || userInput.toLowerCase().contentEquals("no") || userInput.equals("no")) {
-            BigInteger GCD = new BigInteger(String.valueOf(BigInteger.valueOf(0)));
+            } else if (userInput.toLowerCase().contentEquals("no")) {
+                BigInteger GCD = new BigInteger(String.valueOf(BigInteger.valueOf(0)));
 //            int E = 2;
-            BigInteger E = new BigInteger(String.valueOf(2));
-            while (!GCD.equals(BigInteger.valueOf(1))) {
-                E = E.add(BigInteger.valueOf(1));
-                GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1)));
+                BigInteger E = new BigInteger(String.valueOf(2));
+                while (!GCD.equals(BigInteger.valueOf(1))) {
+                    E = E.add(BigInteger.valueOf(1));
+                    GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1)));
 
-                System.out.print("GCD(" + E + "," + N + ") = " + GCD);
-                if (!GCD.equals(BigInteger.valueOf(1)))
-                    System.out.println(" - This GCD(e," + N + ") does not = 1, So another E value is selected");
-                else {
-                    System.out.println("\nYour E Value is: " + E);
+                    System.out.print("GCD(" + E + "," + N + ") = " + GCD);
+                    if (!GCD.equals(BigInteger.valueOf(1)))
+                        System.out.println(" - This GCD(" + E + ", " + N + ") does not = 1, So another E value is selected");
+                    else {
+                        System.out.println("\nYour E Value is: " + E + "\n");
 
-                    // Testing Method For Integer Value is Too Big, so change it into String ""
+                        // Testing Method For Integer Value is Too Big, so change it into String ""
 //                    BigInteger x;
 //                    BigInteger F = BigInteger.valueOf(3919);
 //                    BigInteger G = new BigInteger("4599650820"); -- Here Big value into string, now it works
 //                    x = F.modInverse(G);
 //                    show.println(x);
 
-                    System.out.println("Public Key: (N="+N+", "+"E="+ E+")");
+                        System.out.println("Public Key: (N=" + N + ", " + "E=" + E + ")");
 
-                    BigInteger D;
+                        BigInteger D;
 
-                    D = modInverse(E, PN);  //-- Use this when not using BigInteger or modInverse Method returns BigInteger
+                        D = modInverse(E, PN);  //-- Use this when not using BigInteger or modInverse Method returns BigInteger
 //                    D = BigInteger.valueOf(modInverse(E, PN)); //Use this when using BigIntegers or if modInverse method returns int
 
-                    System.out.println("Private key is d = e^-1 mod phi(n) = " + E + "^-1 mod " + PN);
-                    System.out.println("Private Key: D = " + D);
+//                    System.out.println("Private key is d = e^-1 mod phi(n) = " + E + "^-1 mod " + PN);
+                        System.out.println("Private Key: D = " + D + "\n");
+                        System.out.println("Known Parameters: " + "P = " + P + ", " + " Q = " + Q + ", " + " N = " + N + ", " + " E = " + E + ", " + " ϕn = " + PN + ", " + " D = " + D + "\n");
 
-                    show.print("Please enter a Message to encrypt: ");
-                    M = scanner.nextBigInteger();
+                        show.print("Please enter a Message to encrypt: ");
+                        M = scanner.nextBigInteger();
 
-                    BigInteger ciphertext;
-                    ciphertext = modularArithmetic(M, E, N);
+                        BigInteger ciphertext;
+                        ciphertext = modularArithmetic(M, E, N);
 
-                    show.println("C = "+ciphertext);
+                        show.println("Encrypted Message (Ciphertext C) is C = " + ciphertext + "\n");
 
-                    show.println("Please Enter a Value to Decrypt: ");
-                    BigInteger C;
-                    C = scanner.nextBigInteger();
+                        show.print("Please Enter a Value to Decrypt: ");
+                        BigInteger C;
+                        C = scanner.nextBigInteger();
 
-                    M = modularArithmetic(C, D, N);
-                    show.println(M);
+                        M = modularArithmetic(C, D, N);
+                        show.println("The Decrypted Message(M) is M = " + M + "\n");
+                    }
                 }
+            } else {
+                show.println("You can only enter, Yes or No");
             }
-        } else {
-            show.println("Error");
-        }
 
+            show.println("Do another RSA Calculation: Yes, No (Go Back), exit: ");
+            Scanner another = new Scanner(System.in);
+            if (another.hasNext("no")) {
+                again = false;
+                main.start();
+            } else if (another.hasNext("yes"))
+                again = true;
+            else if (another.hasNext("exit"))
+                System.exit(0);
+        }
     }
 
-    static BigInteger modularArithmetic(BigInteger c, BigInteger d, BigInteger n){
+    static BigInteger modularArithmetic(BigInteger c, BigInteger d, BigInteger n) {
         BigInteger c1 = new BigInteger(String.valueOf(c));
         BigInteger n1 = new BigInteger(String.valueOf(n));
-        BigInteger power = c1.pow(d.intValue());
-        BigInteger y;
-        y = power.mod(n1);
-        return y;
+        // Below Can work fine, but there is no point storing answer in variable and then returning the variable
+        // When you can directly return result without storing it.
+//        BigInteger power = c1.modPow(d,n1);
+//        BigInteger y;
+//        y = power.mod(n1);
+//        return power;
+        return c1.modPow(d, n1);
     }
+
+//    static BigInteger pow(BigInteger base, BigInteger exponent) {
+//        BigInteger result = BigInteger.ONE;
+//        while (exponent.signum() > 0) {
+//            if (exponent.testBit(0)) result = result.multiply(base);
+//            base = base.multiply(base);
+//            exponent = exponent.shiftRight(1);
+//        }
+//        return result;
+//    }
 
     // https://www.baeldung.com/java-greatest-common-divisor
     static BigInteger gcdByEuclidsAlgorithm(BigInteger n1, BigInteger n2) {
@@ -148,14 +178,13 @@ public class RSA {
     }
 
     // https://tutorialspoint.dev/algorithm/mathematical-algorithms/multiplicative-inverse-under-modulo-m
-    static BigInteger modInverse(BigInteger a, BigInteger m)
-    {
+    static BigInteger modInverse(BigInteger a, BigInteger m) {
         BigInteger x;
         new BigInteger(String.valueOf(m));
         x = a.modInverse(m);
         return x;
 
-       // Below is the method for modInverse when using normal integers and not BigInteger
+        // Below is the method for modInverse when using normal integers and not BigInteger
 //       try {
 //            a = a % m;
 //            for (int x = 1; x < m; x++)
