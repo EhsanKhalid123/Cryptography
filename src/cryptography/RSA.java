@@ -49,11 +49,12 @@ public class RSA {
                 while (!GCD.equals(BigInteger.valueOf(1))) {
                     System.out.print("Please enter a E value: ");
                     E = scanner.nextBigInteger();
-                    GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1)));
+//                    GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1))); - WRONG should not be P-1 should be phi(n) I saw P-1 somewhere in lecture slides
+                    GCD = gcdByEuclidsAlgorithm(E, PN);
 
                     System.out.print("\n" + "GCD(" + E + "," + N + ") = " + GCD);
                     if (!GCD.equals(BigInteger.valueOf(1)))
-                        System.out.println(" - This GCD(" + E + ", " + N + ") does not = 1, So another E value is selected");
+                        System.out.println(" - This GCD(" + E + ", " + PN + ") does not = 1, So another E value is selected");
                     else {
                         System.out.println("\nYour E Value is: " + E + "\n");
 
@@ -88,11 +89,12 @@ public class RSA {
                 BigInteger E = new BigInteger(String.valueOf(2));
                 while (!GCD.equals(BigInteger.valueOf(1))) {
                     E = E.add(BigInteger.valueOf(1));
-                    GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1)));
+//                    GCD = gcdByEuclidsAlgorithm(E, P.subtract(BigInteger.valueOf(1))); - WRONG should not be P-1 should be phi(n) I saw P-1 somewhere in lecture slides
+                    GCD = gcdByEuclidsAlgorithm(E, PN);
 
                     System.out.print("GCD(" + E + "," + N + ") = " + GCD);
                     if (!GCD.equals(BigInteger.valueOf(1)))
-                        System.out.println(" - This GCD(" + E + ", " + N + ") does not = 1, So another E value is selected");
+                        System.out.println(" - This GCD(" + E + ", " + PN + ") does not = 1, So another E value is selected");
                     else {
                         System.out.println("\nYour E Value is: " + E + "\n");
 
@@ -136,12 +138,13 @@ public class RSA {
 
             show.print("Do another RSA Calculation: Yes, No (Go Back), exit: ");
             Scanner another = new Scanner(System.in);
-            if (another.hasNext("no")) {
+            String another1 = another.next();
+            if (another1.toLowerCase().contentEquals("no")) {
                 again = false;
                 main.start();
-            } else if (another.hasNext("yes"))
+            } else if (another1.toLowerCase().contentEquals("yes")) {
                 again = true;
-            else if (another.hasNext("exit")) {
+            } else if (another1.toLowerCase().contentEquals("exit")) {
                 System.out.println("");
                 System.out.println("Quitting...");
                 System.out.println("Thanks for using this Cryptography Software");

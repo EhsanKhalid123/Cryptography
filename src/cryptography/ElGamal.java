@@ -75,12 +75,13 @@ public class ElGamal {
 
             System.out.print("Do another ElGamal Calculation: Yes, No (Go Back) or exit: ");
             Scanner another = new Scanner(System.in);
-            if (another.hasNext("no")) {
+            String another1 = another.next();
+            if (another1.toLowerCase().contentEquals("no")) {
                 again = false;
                 main.start();
-            } else if (another.hasNext("yes"))
+            } else if (another1.toLowerCase().contentEquals("yes")) {
                 again = true;
-            else if (another.hasNext("exit")) {
+            } else if (another1.toLowerCase().contentEquals("exit")) {
                 System.out.println("");
                 System.out.println("Quitting...");
                 System.out.println("Thanks for using this Cryptography Software");
