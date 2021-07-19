@@ -134,15 +134,19 @@ public class RSA {
                 show.println("You can only enter, Yes or No");
             }
 
-            show.println("Do another RSA Calculation: Yes, No (Go Back), exit: ");
+            show.print("Do another RSA Calculation: Yes, No (Go Back), exit: ");
             Scanner another = new Scanner(System.in);
             if (another.hasNext("no")) {
                 again = false;
                 main.start();
             } else if (another.hasNext("yes"))
                 again = true;
-            else if (another.hasNext("exit"))
+            else if (another.hasNext("exit")) {
+                System.out.println("");
+                System.out.println("Quitting...");
+                System.out.println("Thanks for using this Cryptography Software");
                 System.exit(0);
+            }
         }
     }
 
