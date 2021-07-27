@@ -3,6 +3,14 @@ package cryptography;//
 import java.util.Scanner;
 
 public class main {
+
+    //    https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+
+    @SuppressWarnings("MethodNameSameAsClassName")
+
     public static void main(String[] args) {
         start();
     }
@@ -39,6 +47,8 @@ public class main {
                     System.out.println("Each method shows the encryption and decryption processes and calculates all the required values");
                     System.out.println("The Cryptography Calculator can encrypt and decrypt messages!");
                     System.out.println();
+                    System.out.println(ANSI_CYAN + "Note: Some entered values may not give the correct result or may crash the program due the specific\nways the Cryptography methods are designed by its founders and if the program crashes or gives a wrong result\nit is not because of this program or a development issue! If the program crashes please restart it Thanks!" + ANSI_RESET);
+                    System.out.println();
                     System.out.println("Version: 1.0.0.0");
                     System.out.println("Developer: Ehsan Khalid\nCompany: EK Creations");
 
@@ -53,15 +63,15 @@ public class main {
                             } else if (back == 2) {
                                 System.out.println();
                                 System.out.println("Quitting...");
-                                System.out.println("Thanks for using the Cryptography Calculator\nDeveloped By EK Creations");
+                                System.out.println("Thanks for using the Cryptography Calculator");
                                 System.exit(0);
                             } else {
                                 System.out.println();
-                                System.out.println("You can only enter 1 or 2!");
+                                System.out.println(ANSI_RED + "You can only enter 1 or 2!" + ANSI_RESET);
                             }
                         } catch (Exception e) {
                             System.out.println();
-                            System.out.println("Error, You can only enter Number Values! Please Try Again!");
+                            System.out.println(ANSI_RED + "Error, You can only enter Number Values!" + ANSI_CYAN + " Please Try Again!" + ANSI_RESET);
                             scanner.next();
                         }
                     }
@@ -71,14 +81,14 @@ public class main {
                     System.out.println("Quitting...");
                     System.out.println("Thanks for using the Cryptography Calculator!");
                     System.exit(0);
-                }else {
+                } else {
                     System.out.println();
-                    System.out.println("You can only choose numbers 1 - 5, Please try again!");
+                    System.out.println(ANSI_RED + "You can only choose numbers 1 - 5," + ANSI_CYAN + " Please try again!" + ANSI_RESET);
                     loop = true;
                 }
             } catch (Exception e) {
                 System.out.println();
-                System.out.println("Error, You can only enter Number Values!");
+                System.out.println(ANSI_RED + "Error, You can only enter Number Values!" + ANSI_RESET);
                 scanner.next();
             }
         }

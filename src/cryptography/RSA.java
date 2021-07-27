@@ -5,6 +5,12 @@ import java.math.BigInteger;
 import java.util.Scanner;
 
 public class RSA {
+
+//    https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+
     public void RSACalculation() {
 
         PrintStream show = System.out; // Defining show to System.out to make it easier to print
@@ -57,7 +63,7 @@ public class RSA {
                         Encryption_Decryption(E, N, PN, GCD, P, Q);
                     }
                 } else {
-                    show.println("You can only enter, Yes or No!\n");
+                    show.println(ANSI_RED + "You can only enter, Yes or No!\n" + ANSI_RESET);
                     loop2 = true;
                 }
             }
@@ -80,7 +86,7 @@ public class RSA {
                     System.out.println("Thanks for using the Cryptography Calculator!");
                     System.exit(0);
                 } else {
-                    System.out.println("You can only enter Yes, No or Exit!\n");
+                    System.out.println(ANSI_RED + "You can only enter Yes, No or Exit!\n" + ANSI_RESET);
                     loop = true;
                 }
             }
@@ -89,7 +95,7 @@ public class RSA {
 
     static void Encryption_Decryption(BigInteger E, BigInteger N, BigInteger PN, BigInteger GCD, BigInteger P, BigInteger Q) {
 
-        BigInteger D = null, C, ciphertext, M;
+        BigInteger D = BigInteger.ZERO, C, ciphertext, M;
 
         System.out.print("GCD(" + E + "," + N + ") = " + GCD);
         if (!GCD.equals(BigInteger.valueOf(1)))
@@ -97,12 +103,13 @@ public class RSA {
         else {
             System.out.println();
             System.out.println("\nYour E Value is: " + E + "\n");
-            System.out.println("Public Key: (N=" + N + ", " + "E=" + E + ")");
+            System.out.println("Public Key: (N=" + N + ", " + "E=" + E + ")\n");
             try {
                 D = modInverse(E, PN);
             } catch (Exception e) {
-                System.out.println("Base is not invertible for entered E value! Please enter a different E value!\nYou may have to restart the application!");
+                System.out.println(ANSI_RED + "Error: Base is not invertible for entered E value! Please enter a different E value! This is due to the way\nRSA method was designed by its founders, the current entered E value doesn't work!" + ANSI_RED + ANSI_CYAN + " Please Try Again!" + ANSI_RESET + "\n");
             }
+
             System.out.println("Private Key: D = " + D + "\n");
             System.out.println("Known Parameters: " + "P = " + P + ", " + " Q = " + Q + ", " + " N = " + N + ", " + " E = " + E + ", " + " ϕn = " + PN + ", " + " D = " + D + "\n");
 
@@ -149,7 +156,7 @@ public class RSA {
                 value = scanner.nextBigInteger();
                 loop = false;
             } catch (Exception e) {
-                System.out.println("Error, You can only enter Number Values!\n");
+                System.out.println(ANSI_RED + "Error, You can only enter Number Values!\n" + ANSI_RESET);
                 scanner.next();
                 loop = true;
             }
@@ -167,14 +174,14 @@ public class RSA {
             try {
                 value = scanner.nextBigInteger();
                 if (!value.isProbablePrime(1)) {
-                    System.out.println(value + " is not a prime number!\n");
+                    System.out.println(ANSI_RED + value + " is not a prime number!\n" + ANSI_RESET);
                     loop = true;
                 } else {
                     loop = false;
                 }
 
             } catch (Exception e) {
-                System.out.println("Error, You can only enter Number Values!\n");
+                System.out.println(ANSI_RED + "Error, You can only enter Number Values!\n" + ANSI_RESET);
                 scanner.next();
                 loop = true;
             }

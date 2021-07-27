@@ -4,6 +4,12 @@ import java.math.BigInteger;
 import java.util.Scanner;
 
 public class ElGamal {
+
+//    https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+
     public void ElGamalCalculation() {
 
         boolean again = true;
@@ -12,7 +18,7 @@ public class ElGamal {
 
             boolean loop = true;
 
-            BigInteger P, G, X, Y, K, R, M, C1, C2, DK, DC1, DC2, KInv = null, DM;
+            BigInteger P, G, X, Y, K, R, M, C1, C2, DK, DC1, DC2, KInv, DM;
 
             System.out.println();
 
@@ -63,16 +69,18 @@ public class ElGamal {
             try {
                 KInv = DK.modInverse(P);
             } catch (Exception e) {
-                System.out.println("Please enter different G, P, R or X values!");
-                again = true;
+                System.out.print(ANSI_RED + "Error: Please enter different G, P, R or X values or change one of the values! Due to the way\nthe ElGamal method was designed by its founders the current entered values don't work!\n" + ANSI_RESET);
+                System.out.println(ANSI_RED + "BigInteger not Invertible!" + ANSI_CYAN + " Please Try Again!" + ANSI_RESET);
+                continue;
             }
+
             System.out.println("The receiver now uses K to calculate K^-1: K^-1 = " + KInv);
 
             System.out.println();
 
             DM = KInv.multiply(DC2).mod(P);
-            System.out.println("The receiver now uses C2 and K^-1 to decrypt the Original Message\nThe Decrypted Message(M) is: " + DM + "\n");
 
+            System.out.println("The receiver now uses C2 and K^-1 to decrypt the Original Message\nThe Decrypted Message(M) is: " + DM + "\n");
 
             while (loop) {
                 System.out.print("Do another ElGamal Calculation: Yes, No (Go Back) or Exit: ");
@@ -92,7 +100,7 @@ public class ElGamal {
                     System.out.println("Thanks for using the Cryptography Calculator!");
                     System.exit(0);
                 } else {
-                    System.out.println("You can only enter Yes, No or Exit!\n");
+                    System.out.println(ANSI_RED + "You can only enter Yes, No or Exit!\n" + ANSI_RESET);
                     loop = true;
                 }
             }
@@ -110,12 +118,11 @@ public class ElGamal {
                 value = scanner.nextBigInteger();
                 loop = false;
             } catch (Exception e) {
-                System.out.println("Error, You can only enter Number Values!\n");
+                System.out.println(ANSI_RED + "Error, You can only enter Number Values!\n" + ANSI_RESET);
                 scanner.next();
                 loop = true;
             }
         }
-
         return value;
     }
 
@@ -129,19 +136,18 @@ public class ElGamal {
             try {
                 value = scanner.nextBigInteger();
                 if (!value.isProbablePrime(1)) {
-                    System.out.println(value + " is not a prime number!\n");
+                    System.out.println(ANSI_RED + value + " is not a prime number!\n" + ANSI_RESET);
                     loop = true;
                 } else {
                     loop = false;
                 }
 
             } catch (Exception e) {
-                System.out.println("Error, You can only enter Number Values!\n");
+                System.out.println(ANSI_RED + "Error, You can only enter Number Values!\n" + ANSI_RESET);
                 scanner.next();
                 loop = true;
             }
         }
-
         return value;
     }
 }

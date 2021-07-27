@@ -3,11 +3,20 @@ package cryptography;//
 import java.math.BigInteger;
 import java.util.Scanner;
 
+@SuppressWarnings("NonAsciiCharacters")
+
 public class Paillier {
+
+//    https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
 
     public void PaillierCalculation() {
 
-        BigInteger P = null, Q = null, PQ = null, PQ1, G, λ, P1, Q1, LU, µ = null, K, R, M, C, DM, DC, GCD;
+        BigInteger P = null, Q = null, PQ = null, PQ1, G, λ, P1, Q1, LU, µ, K, R, M, C, DM, DC, GCD;
+
+
 
         boolean again = true;
         while (again) {
@@ -37,7 +46,7 @@ public class Paillier {
                 }
             }
 
-            G = Validator("Please enter an Integer G: ");
+            G = Validator("Please enter an Integer G (order of g must be a multiple of n): ");
             // G = numberHere(eg: 5652) such that the order of g is a multiple of n. Concept: order of a group, search this for more info
             System.out.println("You chose G value as: " + G + "\n");
 
@@ -56,9 +65,10 @@ public class Paillier {
             try {
                 µ = K.modInverse(PQ);
             } catch (Exception e) {
-                System.out.println("Please enter different P and Q values!");
-                again = true;
+                System.out.println(ANSI_RED + "Error: Please enter different G value as the order of g must be a multiple of n or change P or Q values! Due to the\nway the Paillier method was designed by its founders the current entered values don't work!" + ANSI_CYAN + " Please Try Again!" + ANSI_RESET);
+                continue;
             }
+
             System.out.println("Private Key Parameter: (λ = " + λ + ", " + "µ = " + µ + ")\n");
 
             R = Validator("Please enter a Random Number R: ");
@@ -87,7 +97,6 @@ public class Paillier {
                     loop2 = false;
                     main.start();
                 } else if (another1.toLowerCase().contentEquals("yes")) {
-                    again = true;
                     loop2 = false;
                 } else if (another1.toLowerCase().contentEquals("exit")) {
                     System.out.println();
@@ -95,7 +104,7 @@ public class Paillier {
                     System.out.println("Thanks for using the Cryptography Calculator!");
                     System.exit(0);
                 } else {
-                    System.out.println("You can only enter Yes, No or Exit!\n");
+                    System.out.println(ANSI_RED + "You can only enter Yes, No or Exit!\n" + ANSI_RESET);
                     loop2 = true;
                 }
             }
@@ -150,7 +159,7 @@ public class Paillier {
                 value = scanner.nextBigInteger();
                 loop = false;
             } catch (Exception e) {
-                System.out.println("Error, You can only enter Number Values!\n");
+                System.out.println(ANSI_RED + "Error, You can only enter Number Values!\n" + ANSI_RESET);
                 scanner.next();
                 loop = true;
             }
@@ -169,14 +178,14 @@ public class Paillier {
             try {
                 value = scanner.nextBigInteger();
                 if (!value.isProbablePrime(1)) {
-                    System.out.println(value + " is not a prime number!\n");
+                    System.out.println(ANSI_RED + value + " is not a prime number!\n" + ANSI_RESET);
                     loop = true;
                 } else {
                     loop = false;
                 }
 
             } catch (Exception e) {
-                System.out.println("Error, You can only enter Number Values!\n");
+                System.out.println(ANSI_RED + "Error, You can only enter Number Values!\n" + ANSI_RESET);
                 scanner.next();
                 loop = true;
             }
