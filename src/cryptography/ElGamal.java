@@ -6,25 +6,24 @@ import java.util.Scanner;
 public class ElGamal {
     public void ElGamal() {
 
-        Scanner scanner = new Scanner(System.in);
         boolean again = true;
 
         while (again) {
-            BigInteger P, G, X, Y, K, R, M, D, C1, C2, DK, DC1, DC2, KInv, DM;
-            final BigInteger One = new BigInteger(String.valueOf(1));
+
+            boolean loop = true;
+
+            BigInteger P, G, X, Y, K, R, M, C1, C2, DK, DC1, DC2, KInv = null, DM;
 
             System.out.println();
 
-            System.out.print("Please enter a Prime Number P: ");
-            P = scanner.nextBigInteger();
+            P = Validator2("Please enter a Prime Number P: ");
             System.out.println("You chose P value as: " + P + "\n");
 
-            System.out.print("Please enter a Generator G: ");
-            G = scanner.nextBigInteger();
+            G = Validator("Please enter a Generator G (must be a primitive root to " + P + "): ");
             System.out.println("You chose G value as: " + G + "\n");
 
-            System.out.print("Please enter a Private Key X: ");
-            X = scanner.nextBigInteger();
+
+            X = Validator("Please enter a Private Key X: ");
             System.out.println("You chose X value as: " + X + "\n");
 
             Y = G.modPow(X, P);
@@ -33,15 +32,13 @@ public class ElGamal {
             System.out.println("Public Key: " + "P = " + P + "," + " G = " + G + "," + " Y = " + Y);
             System.out.println("Private Key: " + "X = " + X + "\n");
 
-            System.out.print("Please enter a Random Number R: ");
-            R = scanner.nextBigInteger();
+            R = Validator("Please enter a Random Number R: ");
             System.out.println("You chose R value as: " + R + "\n");
 
             K = Y.modPow(R, P);
             System.out.println("Your K value is: " + K + "\n");
 
-            System.out.print("Please enter Message M to Encrypt: ");
-            M = scanner.nextBigInteger();
+            M = Validator("Please enter Message M to Encrypt: ");
             System.out.println("You chose M value as: " + M + "\n");
 
             C1 = G.modPow(R, P);
@@ -52,11 +49,9 @@ public class ElGamal {
 
             System.out.println("Your Encrypted Message is: (C1 = " + C1 + ", " + "C2 = " + C2 + ")" + "\n");
 
-            System.out.print("Please enter Ciphertext C1 to Decrypt: ");
-            DC1 = scanner.nextBigInteger();
+            DC1 = Validator("Please enter Ciphertext C1 to Decrypt: ");
 
-            System.out.print("Please enter Ciphertext C2 to Decrypt: ");
-            DC2 = scanner.nextBigInteger();
+            DC2 = Validator("Please enter Ciphertext C2 to Decrypt: ");
 
             System.out.println("");
 
@@ -65,7 +60,12 @@ public class ElGamal {
 
             System.out.println("");
 
-            KInv = DK.modInverse(P);
+            try {
+                KInv = DK.modInverse(P);
+            } catch (Exception e){
+                System.out.println("Please enter different G, P, R or X values!");
+                again = true;
+            }
             System.out.println("The receiver now uses K to calculate K^-1: K^-1 = " + KInv);
 
             System.out.println("");
@@ -73,20 +73,75 @@ public class ElGamal {
             DM = KInv.multiply(DC2).mod(P);
             System.out.println("The receiver now uses C2 and K^-1 to decrypt the Original Message\nThe Decrypted Message(M) is: " + DM + "\n");
 
-            System.out.print("Do another ElGamal Calculation: Yes, No (Go Back) or exit: ");
-            Scanner another = new Scanner(System.in);
-            String another1 = another.next();
-            if (another1.toLowerCase().contentEquals("no")) {
-                again = false;
-                main.start();
-            } else if (another1.toLowerCase().contentEquals("yes")) {
-                again = true;
-            } else if (another1.toLowerCase().contentEquals("exit")) {
-                System.out.println("");
-                System.out.println("Quitting...");
-                System.out.println("Thanks for using this Cryptography Software");
-                System.exit(0);
+
+            while (loop) {
+                System.out.print("Do another ElGamal Calculation: Yes, No (Go Back) or Exit: ");
+                Scanner another = new Scanner(System.in);
+
+                String another1 = another.next();
+                if (another1.toLowerCase().contentEquals("no")) {
+                    again = false;
+                    loop = false;
+                    main.start();
+                } else if (another1.toLowerCase().contentEquals("yes")) {
+                    loop = false;
+                    again = true;
+                } else if (another1.toLowerCase().contentEquals("exit")) {
+                    System.out.println("");
+                    System.out.println("Quitting...");
+                    System.out.println("Thanks for using the Cryptography Calculator\nDeveloped By EK Creations");
+                    System.exit(0);
+                } else {
+                    System.out.println("You can only enter Yes, No or Exit!\n");
+                    loop = true;
+                }
             }
         }
+    }
+
+    public static BigInteger Validator(String context) {
+
+        boolean loop = true;
+        Scanner scanner = new Scanner(System.in);
+        BigInteger value = null;
+        while (loop) {
+            System.out.print(context);
+            try {
+                value = scanner.nextBigInteger();
+                loop = false;
+            } catch (Exception e) {
+                System.out.println("Error, You can only enter Number Values!\n");
+                scanner.next();
+                loop = true;
+            }
+        }
+
+        return value;
+    }
+
+    public static BigInteger Validator2(String context) {
+
+        boolean loop = true;
+        Scanner scanner = new Scanner(System.in);
+        BigInteger value = null;
+        while (loop) {
+            System.out.print(context);
+            try {
+                value = scanner.nextBigInteger();
+                if (value.isProbablePrime(1) == false) {
+                    System.out.println(value + " is not a prime number!\n");
+                    loop = true;
+                } else {
+                    loop = false;
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error, You can only enter Number Values!\n");
+                scanner.next();
+                loop = true;
+            }
+        }
+
+        return value;
     }
 }
