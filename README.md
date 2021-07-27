@@ -16,7 +16,7 @@ purposes. These calculators will help you easily calculate certain values
 or parameters instead of manually going through the whole calculation
 process.
 
-#Version
+# Version
 Version 1.0.0.0
 
 Note: There may be calculation error for certain values entered as
@@ -25,6 +25,6 @@ they are not possible to be calculated.
 There may be more additional Cryptography methods added to this in
 the future and also it may be improved with 100% bug fixes.
 
-#Developer
+# Developer
 The project is developed by Ehsan Khalid under my company name
 EK Creations.

@@ -1,4 +1,4 @@
-package cryptography;//
+package cryptography;
 
 import java.util.Scanner;
 
