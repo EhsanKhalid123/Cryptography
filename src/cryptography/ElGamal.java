@@ -1,10 +1,10 @@
-package cryptography;
+package cryptography;//
 
 import java.math.BigInteger;
 import java.util.Scanner;
 
 public class ElGamal {
-    public void ElGamal() {
+    public void ElGamalCalculation() {
 
         boolean again = true;
 
@@ -53,22 +53,22 @@ public class ElGamal {
 
             DC2 = Validator("Please enter Ciphertext C2 to Decrypt: ");
 
-            System.out.println("");
+            System.out.println();
 
             DK = DC1.modPow(X, P);
             System.out.println("The receiver Uses C1 to find K value using k = c1^x mod p: K = " + DK);
 
-            System.out.println("");
+            System.out.println();
 
             try {
                 KInv = DK.modInverse(P);
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Please enter different G, P, R or X values!");
                 again = true;
             }
             System.out.println("The receiver now uses K to calculate K^-1: K^-1 = " + KInv);
 
-            System.out.println("");
+            System.out.println();
 
             DM = KInv.multiply(DC2).mod(P);
             System.out.println("The receiver now uses C2 and K^-1 to decrypt the Original Message\nThe Decrypted Message(M) is: " + DM + "\n");
@@ -87,9 +87,9 @@ public class ElGamal {
                     loop = false;
                     again = true;
                 } else if (another1.toLowerCase().contentEquals("exit")) {
-                    System.out.println("");
+                    System.out.println();
                     System.out.println("Quitting...");
-                    System.out.println("Thanks for using the Cryptography Calculator\nDeveloped By EK Creations");
+                    System.out.println("Thanks for using the Cryptography Calculator!");
                     System.exit(0);
                 } else {
                     System.out.println("You can only enter Yes, No or Exit!\n");
@@ -128,7 +128,7 @@ public class ElGamal {
             System.out.print(context);
             try {
                 value = scanner.nextBigInteger();
-                if (value.isProbablePrime(1) == false) {
+                if (!value.isProbablePrime(1)) {
                     System.out.println(value + " is not a prime number!\n");
                     loop = true;
                 } else {

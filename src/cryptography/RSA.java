@@ -1,4 +1,4 @@
-package cryptography;
+package cryptography;//
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -16,7 +16,7 @@ public class RSA {
             boolean loop = true;
             boolean loop2 = true;
 
-            BigInteger P, Q, N, M, PN;
+            BigInteger P, Q, N, PN;
             String userInput;
             System.out.println();
 
@@ -38,74 +38,30 @@ public class RSA {
 
                 if (userInput.toLowerCase().contentEquals("yes")) {
                     loop2 = false;
-                    BigInteger GCD = new BigInteger(String.valueOf(0)), E, D = null, ciphertext, C;
+                    BigInteger GCD = new BigInteger(String.valueOf(0)), E;
 
                     while (!GCD.equals(BigInteger.valueOf(1))) {
                         System.out.println();
                         E = Validator("Please enter a E value: ");
                         GCD = gcdByEuclidsAlgorithm(E, PN);
-                        System.out.print("\n" + "GCD(" + E + "," + N + ") = " + GCD);
-
-                        if (!GCD.equals(BigInteger.valueOf(1)))
-                            System.out.println(" - This GCD(" + E + ", " + PN + ") does not = 1, So another E value is selected");
-                        else {
-                            System.out.println("\nYour E Value is: " + E + "\n");
-                            System.out.println("Public Key: (N=" + N + ", " + "E=" + E + ")");
-                            try {
-                                D = modInverse(E, PN);
-                            } catch (Exception e) {
-                                System.out.println("Base is not invertible for entered E value! Please enter a different E value!");
-                                loop2 = true;
-                            }
-                            System.out.println("Private Key: D = " + D + "\n");
-                            System.out.println("Known Parameters: " + "P = " + P + ", " + " Q = " + Q + ", " + " N = " + N + ", " + " E = " + E + ", " + " ϕn = " + PN + ", " + " D = " + D + "\n");
-
-                            M = Validator("Please enter a Message to encrypt: ");
-                            ciphertext = modularArithmetic(M, E, N);
-
-                            show.println("Encrypted Message (Ciphertext C) is C = " + ciphertext + "\n");
-
-                            C = Validator("Please Enter a Value to Decrypt: ");
-                            M = modularArithmetic(C, D, N);
-
-                            show.println("The Decrypted Message(M) is M = " + M + "\n");
-                        }
+                        Encryption_Decryption(E, N, PN, GCD, P, Q);
                     }
                 } else if (userInput.toLowerCase().contentEquals("no")) {
                     loop2 = false;
-                    BigInteger GCD = new BigInteger(String.valueOf(0)), E = new BigInteger(String.valueOf(2)), D, ciphertext, C;
+                    BigInteger GCD = new BigInteger(String.valueOf(0)), E = new BigInteger(String.valueOf(2));
                     System.out.println();
+
                     while (!GCD.equals(BigInteger.valueOf(1))) {
                         E = E.add(BigInteger.valueOf(1));
                         GCD = gcdByEuclidsAlgorithm(E, PN);
-
-                        System.out.print("GCD(" + E + "," + N + ") = " + GCD);
-                        if (!GCD.equals(BigInteger.valueOf(1)))
-                            System.out.println(" - This GCD(" + E + ", " + PN + ") does not = 1, So another E value is selected");
-                        else {
-                            System.out.println();
-                            System.out.println("\nYour E Value is: " + E + "\n");
-                            System.out.println("Public Key: (N=" + N + ", " + "E=" + E + ")");
-                            D = modInverse(E, PN);
-
-                            System.out.println("Private Key: D = " + D + "\n");
-                            System.out.println("Known Parameters: " + "P = " + P + ", " + " Q = " + Q + ", " + " N = " + N + ", " + " E = " + E + ", " + " ϕn = " + PN + ", " + " D = " + D + "\n");
-
-                            M = Validator("Please enter a Message to encrypt: ");
-                            ciphertext = modularArithmetic(M, E, N);
-
-                            show.println("Encrypted Message (Ciphertext C) is C = " + ciphertext + "\n");
-
-                            C = Validator("Please Enter a Value to Decrypt: ");
-                            M = modularArithmetic(C, D, N);
-                            show.println("The Decrypted Message(M) is M = " + M + "\n");
-                        }
+                        Encryption_Decryption(E, N, PN, GCD, P, Q);
                     }
                 } else {
                     show.println("You can only enter, Yes or No!\n");
                     loop2 = true;
                 }
             }
+
             while (loop) {
                 show.print("Do another RSA Calculation: Yes, No (Go Back), Exit: ");
                 Scanner another = new Scanner(System.in);
@@ -119,15 +75,45 @@ public class RSA {
                     loop = false;
                     again = true;
                 } else if (another1.toLowerCase().contentEquals("exit")) {
-                    System.out.println("");
+                    System.out.println();
                     System.out.println("Quitting...");
-                    System.out.println("Thanks for using the Cryptography Calculator\nDeveloped By EK Creations");
+                    System.out.println("Thanks for using the Cryptography Calculator!");
                     System.exit(0);
                 } else {
                     System.out.println("You can only enter Yes, No or Exit!\n");
                     loop = true;
                 }
             }
+        }
+    }
+
+    static void Encryption_Decryption(BigInteger E, BigInteger N, BigInteger PN, BigInteger GCD, BigInteger P, BigInteger Q) {
+
+        BigInteger D = null, C, ciphertext, M;
+
+        System.out.print("GCD(" + E + "," + N + ") = " + GCD);
+        if (!GCD.equals(BigInteger.valueOf(1)))
+            System.out.println(" - This GCD(" + E + ", " + PN + ") does not = 1, So another E value is selected");
+        else {
+            System.out.println();
+            System.out.println("\nYour E Value is: " + E + "\n");
+            System.out.println("Public Key: (N=" + N + ", " + "E=" + E + ")");
+            try {
+                D = modInverse(E, PN);
+            } catch (Exception e) {
+                System.out.println("Base is not invertible for entered E value! Please enter a different E value!\nYou may have to restart the application!");
+            }
+            System.out.println("Private Key: D = " + D + "\n");
+            System.out.println("Known Parameters: " + "P = " + P + ", " + " Q = " + Q + ", " + " N = " + N + ", " + " E = " + E + ", " + " ϕn = " + PN + ", " + " D = " + D + "\n");
+
+            M = Validator("Please enter a Message to encrypt: ");
+            ciphertext = modularArithmetic(M, E, N);
+
+            System.out.println("Encrypted Message (Ciphertext C) is C = " + ciphertext + "\n");
+
+            C = Validator("Please Enter a Value to Decrypt: ");
+            M = modularArithmetic(C, D, N);
+            System.out.println("The Decrypted Message(M) is M = " + M + "\n");
         }
     }
 
@@ -180,7 +166,7 @@ public class RSA {
             System.out.print(context);
             try {
                 value = scanner.nextBigInteger();
-                if (value.isProbablePrime(1) == false) {
+                if (!value.isProbablePrime(1)) {
                     System.out.println(value + " is not a prime number!\n");
                     loop = true;
                 } else {

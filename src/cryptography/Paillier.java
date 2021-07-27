@@ -1,11 +1,11 @@
-package cryptography;
+package cryptography;//
 
 import java.math.BigInteger;
 import java.util.Scanner;
 
 public class Paillier {
 
-    public void Paillier() {
+    public void PaillierCalculation() {
 
         BigInteger P = null, Q = null, PQ = null, PQ1, G, λ, P1, Q1, LU, µ = null, K, R, M, C, DM, DC, GCD;
 
@@ -15,7 +15,7 @@ public class Paillier {
             boolean loop = true;
             boolean loop2 = true;
 
-            while (loop == true) {
+            while (loop) {
                 System.out.println();
                 loop = false;
 
@@ -55,7 +55,7 @@ public class Paillier {
 
             try {
                 µ = K.modInverse(PQ);
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Please enter different P and Q values!");
                 again = true;
             }
@@ -90,9 +90,9 @@ public class Paillier {
                     again = true;
                     loop2 = false;
                 } else if (another1.toLowerCase().contentEquals("exit")) {
-                    System.out.println("");
+                    System.out.println();
                     System.out.println("Quitting...");
-                    System.out.println("Thanks for using the Cryptography Calculator\nDeveloped By EK Creations");
+                    System.out.println("Thanks for using the Cryptography Calculator!");
                     System.exit(0);
                 } else {
                     System.out.println("You can only enter Yes, No or Exit!\n");
@@ -136,8 +136,7 @@ public class Paillier {
         BigInteger gcd = a.gcd(b);
 
         // calculate lcm using formula: lcm * gcd = x * y
-        BigInteger lcm = mul.divide(gcd);
-        return lcm;
+        return mul.divide(gcd);
     }
 
     public static BigInteger Validator(String context) {
@@ -169,7 +168,7 @@ public class Paillier {
             System.out.print(context);
             try {
                 value = scanner.nextBigInteger();
-                if (value.isProbablePrime(1) == false) {
+                if (!value.isProbablePrime(1)) {
                     System.out.println(value + " is not a prime number!\n");
                     loop = true;
                 } else {
